@@ -2,11 +2,11 @@
 
 const express = require('express')
 const path = require('path')
+
 const app = express()
+const port = process.env.PORT || 9000
 
-app.use("/static",express.static('static/public'))
-
-
+app.use("/static",express.static('static'))
 
 
 app.set('views', path.join(__dirname, 'app/views'))
@@ -16,15 +16,11 @@ app.set('view engine', 'pug')
 app.get("/", (req, res) => 
 {
     res.render(
-        'index',
-        {title: 'Hey Hey Hey', message: 'Yo Yo'}
+        'index'
     )
 })
 
 
-
-
-
-
-
-app.listen(8080)
+app.listen(port, () => {
+    console.log(`SERVIDOR WEB CORRIENDO EN EL PUERTO 9000`)
+})
