@@ -1,0 +1,22 @@
+{
+  "name": "battle-tank-client",
+  "version": "1.0.0",
+  "description": "FRONT-END",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctreminiom/battle-tank-client.git"
+  },
+  "author": "Carlos Treminio (ctreminiom079@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ctreminiom/battle-tank-client/issues"
+  },
+  "homepage": "https://github.com/ctreminiom/battle-tank-client#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
