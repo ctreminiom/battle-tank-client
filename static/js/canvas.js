@@ -1,49 +1,110 @@
-var game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'pantalla', { preload: preload, create: create, update: update });
-
-var bricks;
-var player01;
-var controllers;
-
-
-var balas;
-var tiempoBala = 0;
-var bullet_asd;
-
-function request_movement(url)
-{
-    var request = new XMLHttpRequest();
-
-
-    request.onreadystatechange = function()
-    {
-        if (request.readyState == 4 && request.status == 200)
-        {
-            document.getElementById("prueba").innerHTML = request.responseText;
-
-            console.log(JSON.parse(request.responseText));
-        }
+var game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'pantalla', 
+    {   preload: preload, 
+        create:  create,
+        update:  update 
     }
+);
+
+var bricks, yellow, controllers, eagles, enemy;
+
+var weapon, fireButton;
 
 
-    request.open('GET', url, true);
+var bullet;
 
-    request.send();
-}
-
-function create_eagles()
+function preload() 
 {
-    for (var count = 0; count < 10; count++ )
-    {
-        var eagle = bricks.create(40 + count * 40, 0, "eagle");
-        eagle.body.immovable = true;
-    }
+    game.load.image('brick', '/static/img/brick.png');
+    game.load.spritesheet('player-01', '/static/img/player01.png', 50, 50);
+    game.load.spritesheet('enemy', '/static/img/player02.png', 50, 50);
+    
+    game.load.spritesheet('eagle', '/static/img/eagle.png', 30, 30);
+    game.load.image('bala', '/static/img/bullet.png');
 }
 
 
-
-
-function create_bricks()
+function create()
 {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    drawBricks();
+    drawTanks();
+
+
+    weapon = game.add.weapon(30, 'bala');
+    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    weapon.bulletSpeed = 300;
+    weapon.fireRate = 500;
+
+    weapon.trackSprite(yellow, 0, 0, true);
+
+    fireButton = this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+
+
+}
+
+function update() 
+{
+   game.physics.arcade.collide(yellow, bricks);
+   game.physics.arcade.collide(weapon, bricks);
+   
+   
+   
+
+   enableControl();
+
+
+   if (fireButton.isDown)
+   {
+        weapon.fire();
+   }
+
+   game.world.wrap(yellow, 16);
+
+}
+
+function render() {
+    
+        weapon.debug();
+    
+    }
+
+
+
+function drawTanks()
+{
+    createYellowTank();
+}
+
+function createYellowTank()
+{
+     //add player-01
+     yellow = game.add.sprite(50, 500, "player-01");
+
+     yellow.anchor.setTo(0.5, 0.5);
+     game.physics.arcade.enable(yellow);
+     yellow.body.collideWorldBounds = true;
+
+     enemy = game.add.sprite(400, 500, "enemy");
+     game.physics.enable(enemy);
+     enemy.anchor.setTo(0.5, 0.5);
+     enemy.body.moves = false;
+ 
+     //add animation
+     yellow.animations.add("izquierda", [0], 10, true);
+     yellow.animations.add("arriba", [1], 10, true);
+     yellow.animations.add("abajo", [2], 10, true);
+     yellow.animations.add("derecha", [3], 10, true);
+
+     controllers = game.input.keyboard.createCursorKeys();
+
+}
+
+function drawBricks()
+{
+    bricks = game.add.group();
+    bricks.enableBody = true;
+
     //arriba
     for (var count = 0; count < 50; count++ )
     {
@@ -85,167 +146,54 @@ function create_bricks()
         var brick = bricks.create(1000, 200 + count * 30, "brick");
         brick.body.immovable = true;
     }
-
 }
 
 
-function preload() 
+function enableControl()
 {
-    game.load.image('brick', '/static/img/brick.png');
-    game.load.spritesheet('player-01', '/static/img/player01.png', 50, 50);
-    game.load.spritesheet('eagle', '/static/img/eagle.png', 30, 30);
-    game.load.image('bala', '/static/img/bullet.png');
-    
-    
-}
+    yellow.body.velocity.x = 0;
+    yellow.body.velocity.y = 0;
 
-function create() 
-{
-    //fisica
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    //ladrillos
-    bricks = game.add.group();
-    bricks.enableBody = true;
-    create_bricks();
+    if (controllers.left.isDown)
+    {
+         yellow.body.velocity.x = -100;
+         yellow.body.velocity.y = 0;
+         yellow.animations.play("izquierda");
+ 
+ 
+         //console.log("DATA") 
+         lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
+         console.log(lista)
+    }
 
 
-    //aguilas
-    eagles = game.add.group();
-    eagles.enableBody = true;
-    create_eagles();
+    if (controllers.right.isDown)
+    {
+         yellow.body.velocity.x = +100;
+         yellow.body.velocity.y = 0;
+         yellow.animations.play("derecha");
+ 
+         lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
+         console.log(lista)
+    }
 
+    if (controllers.up.isDown)
+    {
+         yellow.body.velocity.y = -100;
+         yellow.body.velocity.x = 0;
+         yellow.animations.play("arriba");
+ 
+         lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
+         console.log(lista)
+    }
 
-    //add player-01
-    player01 = game.add.sprite(50, 500, "player-01");
-    game.physics.arcade.enable(player01);
-
-
-    //add animation
-    player01.animations.add("izquierda", [0], 10, true);
-    player01.animations.add("arriba", [1], 10, true);
-    player01.animations.add("abajo", [2], 10, true);
-    player01.animations.add("derecha", [3], 10, true);
-
-
-    //add keyboard
-    controllers = game.input.keyboard.createCursorKeys();
-
-
-    // balas
-    bullet_asd = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-
-    // add balas
-
-    balas = game.add.group();
-    balas.enableBody = true;
-    balas.physicsBodyType = Phaser.Physics.ARCADE;
-
-    balas.createMultiple(30, 'bala');
-
-
-    balas.setAll('anchor.x', 0.5);
-    balas.setAll('anchor.y', 0.5);
-
-    balas.setAll('outOfBoundsKill', true);
-    balas.setAll('checkWorldBounds', true);
-    
-    
-    
-
-}
-
-
-
-function update() 
-{
-   game.physics.arcade.collide(player01, bricks);
-
-   player01.body.velocity.x = 0;
-   player01.body.velocity.y = 0;
-   
-
-   if (controllers.left.isDown)
-   {
-        player01.body.velocity.x = -50;
-        player01.body.velocity.y = 0;
-        player01.animations.play("izquierda");
-
-
-        //console.log("DATA") 
-        lista = [Math.trunc(player01.world.x), Math.trunc(player01.world.y)];
-        console.log(lista)
-
-        //url = "https://swapi.co/api/people/3"
-        
-        //request_movement(url);
-
-   }
-   
-   if (controllers.right.isDown)
-   {
-        player01.body.velocity.x = +50;
-        player01.body.velocity.y = 0;
-        player01.animations.play("derecha");
-
-        //console.log("DATA") 
-        lista = [Math.trunc(player01.world.x), Math.trunc(player01.world.y)];
-        console.log(lista)
-
-        //url = "https://swapi.co/api/people/8"
-        
-        //request_movement(url);
-
-   }
-   
-   if (controllers.up.isDown)
-   {
-        player01.body.velocity.y = -50;
-        player01.body.velocity.x = 0;
-        player01.animations.play("arriba");
-
-        //console.log("DATA") 
-        lista = [Math.trunc(player01.world.x), Math.trunc(player01.world.y)];
-        console.log(lista)
-
-        //url = "https://swapi.co/api/people/2"
-
-        //request_movement(url);
-   }
-   
-   if (controllers.down.isDown)
-   {
-        player01.body.velocity.y = +50;
-        player01.body.velocity.x = 0;
-        player01.animations.play("abajo");
-
-        //console.log("DATA") 
-        lista = [Math.trunc(player01.world.x), Math.trunc(player01.world.y)];
-        console.log(lista)
-
-        //url = "https://swapi.co/api/people/5"
-        
-                //request_movement(url);
-       
-   }
-
-
-   var aaa;
-   if (bullet_asd.isDown)
-   {
-       if(game.time.now  > tiempoBala)
-       {
-            aaa = balas.getFirstExists(false);
-       }
-
-       if(aaa)
-       {
-            aaa.reset(player01.x, player01.y);
-            aaa.body.velocity.y = -300;
-
-            tiempoBala = game.time.now + 100;
-        }
-   }
-
+    if (controllers.down.isDown)
+    {
+         yellow.body.velocity.y = +100;
+         yellow.body.velocity.x = 0;
+         yellow.animations.play("abajo");
+ 
+         lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
+         console.log(lista)
+    }
 }
