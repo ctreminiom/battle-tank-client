@@ -7,6 +7,7 @@ const app = express()
 const port = process.env.PORT || 9000
 
 app.use("/static",express.static('static'))
+app.disable('etag');
 
 
 app.set('views', path.join(__dirname, 'app/views'))
