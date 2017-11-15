@@ -12,6 +12,10 @@ game = new Phaser.Game
     }
 );
 
+var yellowLife = 100;
+var grayLife = 100;
+
+var yellowScore, grayScore;
 
 
 
@@ -33,6 +37,11 @@ function create()
     
     drawYellowTank();
     drawGrayTank();
+
+
+    yellowScore = game.add.text(30, 0, "Yellow Tank Life: 100", {fontSize: '25px', fill: 'white'});
+    grayScore = game.add.text(940, 0, "Gray Tank Life: 100", {fontSize: '25px', fill: 'white'});
+    
 }
 
 function update()
@@ -83,6 +92,14 @@ function update()
         yellowWeapon.bullets,
         gray,
         hitGray,
+        null,
+        this
+    );
+
+    game.physics.arcade.overlap(
+        grayWeapon.bullets,
+        yellow,
+        hitYellow,
         null,
         this
     );
@@ -355,9 +372,28 @@ function hitGray(weapon)
 {
     weapon.kill();
 
+    grayLife -= 10;
+    grayScore.text = "Gray Tank Life: " + grayLife;
+
     drawGrayTank();
 
     weapon.kill();
     console.log("AQUI LOGICA");
 
 }
+
+
+function hitYellow(weapon)
+{
+    weapon.kill();
+
+    yellowLife -= 10;
+    yellowScore.text = "Yellow Tank Life: " + yellowLife;
+
+    drawYellowTank();
+
+    weapon.kill();
+    console.log("AQUI LOGICA");
+
+}
+
