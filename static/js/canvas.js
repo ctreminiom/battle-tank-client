@@ -1,15 +1,21 @@
-var game = new Phaser.Game(1200, 600, Phaser.CANVAS, 'pantalla', 
-    {   preload: preload, 
+var game;
+game = new Phaser.Game
+(
+    1200,
+    600,
+    Phaser.CANVAS,
+    'pantalla',
+    {
+        preload: preload,
         create:  create,
-        update:  update 
+        update:  update
     }
 );
 
-var bricks, yellow, controllers, eagles, enemy;
-var weapon, fireButton;
-var gray, obtacules, fireButton02;
 
-function preload() 
+
+
+function preload()
 {
     game.load.image('brick', '/static/img/brick.png');
 
@@ -19,134 +25,77 @@ function preload()
     game.load.image('bullet', '/static/img/bullet.png');
 }
 
-
 function create()
 {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     drawBricks();
-    drawTanks();
-
-    // add balas
-    weapon = game.add.weapon(200, 'bullet');
-    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    weapon.bulletSpeed = 600;
-    weapon.fireRate = 2000;
-    weapon.trackSprite(yellow, 0, 0, false);
-    fireButton = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-
-    weapon02 = game.add.weapon(200, 'bullet');
-    weapon02.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    weapon02.bulletSpeed = 600;
-    weapon02.fireRate = 2000;
-    weapon02.trackSprite(gray, 0, 0, false);
-    fireButton02 = game.input.keyboard.addKey(Phaser.KeyCode.Q);
-
-}
-
-function update() 
-{
-   game.physics.arcade.collide(yellow, bricks);
-   game.physics.arcade.collide(yellow, obtacules);
-   
-
-   game.physics.arcade.overlap(weapon.bullets, obtacules, deleteWeaponAndObtacules, null, this);
-   game.physics.arcade.overlap(weapon.bullets, bricks, deleteWeapon, null, this);
-   
-
-
-
-   game.physics.arcade.overlap(weapon.bullets, gray, hitGray, null, this);
-   
-   
-
-   enableControl();
-
-
-   if (fireButton.isDown)
-   {
-        weapon.fire();
-   }
-
-   if (fireButton02.isDown)
-   {
-        weapon02.fire();
-   }
-
-
-}
-
-function hitGray(weapon, gray)
-{
-    gray.kill();
-}
-
-
-
-function deleteWeapon(weapon, obtacules)
-{
-    weapon.kill();
-}
-
-
-function deleteWeaponAndObtacules(weapon, obtacules)
-{
-    obtacules.kill();
-    weapon.kill();
-}
-
-
-
-
-function drawTanks()
-{
-    createYellowTank();
-    createGrayTank();
-}
-
-function createGrayTank()
-{
-    gray = game.add.sprite(1130, 100, "gray");
-
-    gray.anchor.setTo(0.5, 0.5);
-    game.physics.arcade.enable(gray);
-    gray.body.collideWorldBounds = true;
-
-
-    gray.animations.add("izq", [6,7], 10, true);
-    gray.animations.add("arri", [2,3], 10, true);
-    gray.animations.add("aba", [4,5], 10, true);
-    gray.animations.add("der", [0,1], 10, true);
     
+    drawYellowTank();
+    drawGrayTank();
 }
 
-function createYellowTank()
+function update()
 {
-     //add player-01
-     yellow = game.add.sprite(80, 540, "yellow");
+    game.physics.arcade.collide(yellow, bricks);
+    game.physics.arcade.collide(yellow, obtacules);
 
-     yellow.anchor.setTo(0.5, 0.5);
-     game.physics.arcade.enable(yellow);
-     yellow.body.collideWorldBounds = true;
- 
-     //add animation
-     yellow.animations.add("izquierda", [6, 7], 10, true);
-     yellow.animations.add("arriba", [2, 3], 10, true);
-     yellow.animations.add("abajo", [4, 5], 10, true);
-     yellow.animations.add("derecha", [0, 1], 10, true);
+    game.physics.arcade.collide(gray, bricks);
+    game.physics.arcade.collide(gray, obtacules);
+    enableTanksControl();
 
-     controllers = game.input.keyboard.createCursorKeys();
+    shoot();
 
-     upButton = game.input.keyboard.addKey(Phaser.Keyboard.W);
-     
-     downButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
-     
-     leftButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
-     
-     rightButton = game.input.keyboard.addKey(Phaser.Keyboard.D);
+
+    game.physics.arcade.overlap(
+        yellowWeapon.bullets,
+        obtacules,
+        deleteWeaponAndObtacules,
+        null,
+        this
+    );
+
+    game.physics.arcade.overlap(
+        grayWeapon.bullets,
+        obtacules,
+        deleteWeaponAndObtacules,
+        null,
+        this
+    );
+
+    game.physics.arcade.overlap(
+        grayWeapon.bullets,
+        bricks,
+        deleteWeapon,
+        null,
+        this
+    );
+
+    game.physics.arcade.overlap(
+        yellowWeapon.bullets,
+        bricks,
+        deleteWeapon,
+        null,
+        this
+    );
+
+    game.physics.arcade.overlap(
+        yellowWeapon.bullets,
+        gray,
+        hitGray,
+        null,
+        this
+    );
+
+
+
+    
 
 }
 
+
+
+var  bricks, obtacules;
 function drawBricks()
 {
     bricks = game.add.group();
@@ -196,26 +145,85 @@ function drawBricks()
         var obtacule = obtacules.create(1000, 200 + count * 30, "brick");
         obtacule.body.immovable = true;
     }
+
 }
 
 
-function enableControl()
+var yellow, yellowFire, yellowWeapon, yellowControl;
+function drawYellowTank()
+{
+    //yellow tank
+    yellow = game.add.sprite(80, 540, "yellow");
+
+    yellow.anchor.setTo(0.5, 0.5);
+    game.physics.arcade.enable(yellow);
+    yellow.body.collideWorldBounds = true;
+
+    //add animation
+    yellow.animations.add("izquierda", [6, 7], 10, true);
+    yellow.animations.add("arriba", [2, 3], 10, true);
+    yellow.animations.add("abajo", [4, 5], 10, true);
+    yellow.animations.add("derecha", [0, 1], 10, true);
+
+    // weapon
+    yellowWeapon = game.add.weapon(200, 'bullet');
+    yellowWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    yellowWeapon.bulletSpeed = 600;
+    yellowWeapon.fireRate = 2000;
+    yellowWeapon.trackSprite(yellow, 0, 0, false);
+
+    yellowControl =  game.input.keyboard.createCursorKeys();
+
+    //action
+    yellowFire = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+    
+}
+
+
+var gray, grayFire, grayWeapon;
+function drawGrayTank()
+{
+    gray = game.add.sprite(1130, 100, "gray");
+    
+    gray.anchor.setTo(0.5, 0.5);
+    game.physics.arcade.enable(gray);
+    gray.body.collideWorldBounds = true;
+
+    gray.animations.add("izq", [6,7], 10, true);
+    gray.animations.add("arri", [2,3], 10, true);
+    gray.animations.add("aba", [4,5], 10, true);
+    gray.animations.add("der", [0,1], 10, true);
+
+    grayWeapon = game.add.weapon(200, 'bullet');
+    grayWeapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    grayWeapon.bulletSpeed = 600;
+    grayWeapon.fireRate = 2000;
+    grayWeapon.trackSprite(gray, 0, 0, false);
+
+
+    grayFire = game.input.keyboard.addKey(Phaser.KeyCode.Q);
+    
+    upButton = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    downButton = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    leftButton = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    rightButton = game.input.keyboard.addKey(Phaser.Keyboard.D);
+}
+
+
+function enableTanksControl()
 {
     yellow.body.velocity.x = 0;
     yellow.body.velocity.y = 0;
 
-
     gray.body.velocity.x = 0;
     gray.body.velocity.y = 0;
 
-    if (controllers.left.isDown)
+    if (yellowControl.left.isDown)
     {
          yellow.body.velocity.x = -100;
          yellow.body.velocity.y = 0;
          yellow.animations.play("izquierda");
-         weapon.fireAngle = Phaser.ANGLE_LEFT;
-     
- 
+         yellowWeapon.fireAngle = Phaser.ANGLE_LEFT;
  
          //console.log("DATA") 
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
@@ -223,45 +231,45 @@ function enableControl()
     }
 
 
-    if (controllers.right.isDown)
+    if (yellowControl.right.isDown)
     {
          yellow.body.velocity.x = +100;
          yellow.body.velocity.y = 0;
          yellow.animations.play("derecha");
-         weapon.fireAngle = Phaser.ANGLE_RIGHT;
+         yellowWeapon.fireAngle = Phaser.ANGLE_RIGHT;
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+         
 
     }
 
-    if (controllers.up.isDown)
+
+    if (yellowControl.up.isDown)
     {
          yellow.body.velocity.y = -100;
          yellow.body.velocity.x = 0;
          yellow.animations.play("arriba");
-         weapon.fireAngle = Phaser.ANGLE_UP;
+         yellowWeapon.fireAngle = Phaser.ANGLE_UP;
          
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+         
 
     }
 
-    if (controllers.down.isDown)
+    if (yellowControl.down.isDown)
     {
          yellow.body.velocity.y = +100;
          yellow.body.velocity.x = 0;
          yellow.animations.play("abajo");
-         weapon.fireAngle = Phaser.ANGLE_DOWN;
+         yellowWeapon.fireAngle = Phaser.ANGLE_DOWN;
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
-
+         
     }
-
-
-
 
 
     if (leftButton.isDown)
@@ -269,9 +277,7 @@ function enableControl()
          gray.body.velocity.x = -100;
          gray.body.velocity.y = 0;
          gray.animations.play("izq");
-         weapon02.fireAngle = Phaser.ANGLE_LEFT;
-     
- 
+         grayWeapon.fireAngle = Phaser.ANGLE_LEFT;
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
@@ -284,11 +290,12 @@ function enableControl()
          gray.body.velocity.x = +100;
          gray.body.velocity.y = 0;
          gray.animations.play("der");
-         weapon02.fireAngle = Phaser.ANGLE_RIGHT;
+         grayWeapon.fireAngle = Phaser.ANGLE_RIGHT;
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+         
 
     }
 
@@ -297,11 +304,12 @@ function enableControl()
          gray.body.velocity.y = -100;
          gray.body.velocity.x = 0;
          gray.animations.play("arri");
-         weapon02.fireAngle = Phaser.ANGLE_UP;
+         grayWeapon.fireAngle = Phaser.ANGLE_UP;
          
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+         
 
     }
 
@@ -310,12 +318,46 @@ function enableControl()
          gray.body.velocity.y = +100;
          gray.body.velocity.x = 0;
          gray.animations.play("aba");
-         weapon02.fireAngle = Phaser.ANGLE_DOWN;
+         grayWeapon.fireAngle = Phaser.ANGLE_DOWN;
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+         
 
     }
 }
 
+
+function shoot()
+{
+    if(yellowFire.isDown)
+        yellowWeapon.fire();
+
+    if(grayFire.isDown)
+        grayWeapon.fire();
+}
+
+
+function deleteWeaponAndObtacules(weapon, obtacule)
+{
+    obtacule.kill();
+    weapon.kill();
+}
+
+function deleteWeapon(weapon)
+{
+    weapon.kill();
+}
+
+
+function hitGray(weapon)
+{
+    weapon.kill();
+
+    drawGrayTank();
+
+    weapon.kill();
+    console.log("AQUI LOGICA");
+
+}
