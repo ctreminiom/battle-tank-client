@@ -1,7 +1,7 @@
 var game;
 game = new Phaser.Game
 (
-    1200,
+    screen.width,
     600,
     Phaser.CANVAS,
     'pantalla',
@@ -11,6 +11,7 @@ game = new Phaser.Game
         update:  update
     }
 );
+
 
 var yellowLife = 100;
 var grayLife = 100;
@@ -40,7 +41,7 @@ function create()
 
 
     yellowScore = game.add.text(30, 0, "Yellow Tank Life: 100", {fontSize: '25px', fill: 'white'});
-    grayScore = game.add.text(940, 0, "Gray Tank Life: 100", {fontSize: '25px', fill: 'white'});
+    grayScore = game.add.text(screen.width - 260, 0, "Gray Tank Life: 100", {fontSize: '25px', fill: 'white'});
     
 }
 
@@ -122,14 +123,14 @@ function drawBricks()
     obtacules.enableBody = true;
 
     //arriba
-    for (var count = 0; count < 50; count++ )
+    for (var count = 0; count < 64; count++ )
     {
         var brick = bricks.create(0 + count * 30, 30, "brick");
         brick.body.immovable = true;
     }
 
     //abajo
-    for (var count = 0; count < 50; count++ )
+    for (var count = 0; count < 64; count++ )
     {
         var brick = bricks.create(0 + count * 30, 570, "brick");
         brick.body.immovable = true;
@@ -145,7 +146,7 @@ function drawBricks()
     //derecha
     for (var count = 0; count < 20; count++ )
     {
-        var brick = bricks.create(1170, 0 + count * 30, "brick");
+        var brick = bricks.create(screen.width - 30, 0 + count * 30, "brick");
         brick.body.immovable = true;
     }
 
@@ -200,7 +201,7 @@ function drawYellowTank()
 var gray, grayFire, grayWeapon;
 function drawGrayTank()
 {
-    gray = game.add.sprite(1130, 100, "gray");
+    gray = game.add.sprite(screen.width - 65, 100, "gray");
     
     gray.anchor.setTo(0.5, 0.5);
     game.physics.arcade.enable(gray);
@@ -245,6 +246,10 @@ function enableTanksControl()
          //console.log("DATA") 
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+
+         document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
+         document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
+         
     }
 
 
@@ -257,6 +262,9 @@ function enableTanksControl()
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+
+         document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
+         document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
          
 
     }
@@ -272,6 +280,9 @@ function enableTanksControl()
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+
+         document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
+         document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
          
 
     }
@@ -285,6 +296,9 @@ function enableTanksControl()
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
          console.log(lista)
+
+         document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
+         document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
          
     }
 
@@ -299,6 +313,9 @@ function enableTanksControl()
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+
+         document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
+         document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
     }
 
 
@@ -312,6 +329,9 @@ function enableTanksControl()
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+
+         document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
+         document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
          
 
     }
@@ -326,6 +346,9 @@ function enableTanksControl()
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+
+         document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
+         document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
          
 
     }
@@ -340,6 +363,9 @@ function enableTanksControl()
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
          console.log(lista)
+
+         document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
+         document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
          
 
     }
@@ -379,6 +405,8 @@ function hitGray(weapon)
 
     weapon.kill();
     console.log("AQUI LOGICA");
+
+    document.getElementById("disparo").innerHTML = "Tanque Gris tocado ;V";
 
 }
 

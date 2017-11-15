@@ -2,12 +2,50 @@ extends ./layout.pug
 
 
 block content
-  div#pantalla
 
-  div#prueba
-  
+  #pantalla
 
-  script(src='/static/js/phaser.min.js')
+
+  .row
+    .col.s2.blue.lighten-4
+      h6 Yellow Tank - Requests LOGS
+      p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid possimus excepturi unde nihil saepe, deserunt maxime impedit consectetur ab aut, itaque neque quisquam optio vitae distinctio illum reiciendis, accusantium voluptas?
+        .section
+          .row
+            .col.s12
+              p(id="disparo")
+
+    .col.s2.lime.lighten-5
+      h5 Yellow Tank - Position
+      p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid possimus excepturi unde nihil saepe, deserunt maxime impedit consectetur ab aut, itaque neque quisquam optio vitae distinctio illum reiciendis, accusantium voluptas?
+        .section
+          .row
+            .col.s6
+              p(id="y")
+            .col.s6
+              p(id="x")
+
+    .col.s4.brown.lighten-4
+      h5 Rankings
+      p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid possimus excepturi unde nihil saepe, deserunt maxime impedit consectetur ab aut, itaque neque quisquam optio vitae distinctio illum reiciendis, accusantium voluptas?
+
+    .col.s2.blue-grey.lighten-3
+      h5 Gray Tank - Position
+      p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid possimus excepturi unde nihil saepe, deserunt maxime impedit consectetur ab aut, itaque neque quisquam optio vitae distinctio illum reiciendis, accusantium voluptas?
+        .section
+          .row
+            .col.s6
+              p(id="yG")
+            .col.s6
+              p(id="xG")
+              
+    .col.s2.deep-purple.lighten-1
+      h6 Gray Tank - Requests LOGS
+      p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid possimus excepturi unde nihil saepe, deserunt maxime impedit consectetur ab aut, itaque neque quisquam optio vitae distinctio illum reiciendis, accusantium voluptas?
+
+
+  script(src='/static/lib/phaser.min.js')
+  script(src='/static/lib/jquery-3.2.1.min.js')
   script(src='/static/js/canvas.js')
   
 
