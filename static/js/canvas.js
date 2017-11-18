@@ -19,6 +19,9 @@ var grayLife = 100;
 var yellowScore, grayScore;
 
 
+//sendLife();
+init(); 
+
 
 function preload()
 {
@@ -245,7 +248,7 @@ function enableTanksControl()
  
          //console.log("DATA") 
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -261,7 +264,7 @@ function enableTanksControl()
          yellowWeapon.fireAngle = Phaser.ANGLE_RIGHT;
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -279,7 +282,7 @@ function enableTanksControl()
          
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -295,7 +298,7 @@ function enableTanksControl()
          yellowWeapon.fireAngle = Phaser.ANGLE_DOWN;
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -312,7 +315,7 @@ function enableTanksControl()
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
          document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
@@ -328,7 +331,7 @@ function enableTanksControl()
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
          document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
@@ -345,7 +348,7 @@ function enableTanksControl()
          
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
          document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
@@ -362,7 +365,7 @@ function enableTanksControl()
  
          console.log("DATA - GRAY") 
          lista = [Math.trunc(gray.world.x), Math.trunc(gray.world.y)];
-         console.log(lista)
+         //console.log(lista)
 
          document.getElementById("xG").innerHTML = Math.trunc(gray.world.x);
          document.getElementById("yG").innerHTML = Math.trunc(gray.world.y);
@@ -401,13 +404,14 @@ function hitGray(weapon)
     grayLife -= 10;
     grayScore.text = "Gray Tank Life: " + grayLife;
 
+
+    player =  localStorage.getItem("player2");
+    sendLife(player, grayLife);
+
     drawGrayTank();
 
     weapon.kill();
     console.log("AQUI LOGICA");
-
-    document.getElementById("disparo").innerHTML = "Tanque Gris tocado ;V";
-
 }
 
 
@@ -418,10 +422,86 @@ function hitYellow(weapon)
     yellowLife -= 10;
     yellowScore.text = "Yellow Tank Life: " + yellowLife;
 
+    player =  localStorage.getItem("player1");
+    sendLife(player, yellowLife);
+
     drawYellowTank();
 
     weapon.kill();
     console.log("AQUI LOGICA");
+}
+
+
+function createUUID()
+{
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+
+function sendLife(uuid_player, life)
+{
+    json = {
+       "sesion_uuid": localStorage.getItem("game"),
+      "player_uuid": uuid_player,
+      "life": life.toString()
+    }
+
+    var life;
+
+    $.ajax('/update/life', {
+        type: 'put',
+        contentType:'application/json',
+        data: JSON.stringify(json),
+        xhrFields:{withCredentials: false},
+        success: function(data)
+        {
+            console.log(data)
+            life = data;
+        },
+        error: function(error){
+            console.log(error)
+        }
+    });
+
+    document.getElementById("disparo").innerHTML = life.toString();
 
 }
+
+
+
+
+
+
+function init(data)
+{
+    json = {
+        "uuid_game": createUUID(),
+        "uuid_player01": createUUID(),
+        "type_player01": "01",
+        "life_player01": "100",
+        "uuid_player02": createUUID(),
+        "type_player02": "02",
+        "life_player02": "100"
+      }
+
+      localStorage.setItem("player1", json["uuid_player01"]);
+      localStorage.setItem("player2", json["uuid_player02"]);
+      localStorage.setItem("game", json["uuid_game"]);
+
+    $.ajax('/init', {
+        type: 'post',
+        contentType:'application/json',
+        dataType: 'json',
+        data: JSON.stringify(json),
+        success: function(data)
+        {
+            console.log(data)
+        },
+        error: function(error){
+            console.log(error)
+        }
+    });
+}
+
+
 
