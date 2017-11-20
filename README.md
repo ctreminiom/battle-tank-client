@@ -39,5 +39,7 @@ Toda la logica del juego la maneja el servidor, funcionalidades como, marcadores
 #### <i class="icon-pencil"></i> Instalacion
 
 > **Paso #1** --> git clone https://github.com/ctreminiom/battle-tank-client.git
+
 > **Paso #2** --> npm install
+
 > **Paso #3** --> npm start
