@@ -20,7 +20,7 @@ app.disable('etag');
 app.set('views', path.join(__dirname, 'app/views'))
 app.set('view engine', 'pug')
 
-app.get("/", (req, res) => 
+app.get("/tanques", (req, res) => 
 {
     res.render(
         'index'
@@ -51,6 +51,35 @@ app.post("/init", (req, res) =>
       })
 
 })
+
+app.post("/movement", (req, res) =>
+{
+
+    console.log(req.body)
+
+    //res.body = uuid, player_uuid, x, y.
+
+
+    //res.send() = direccion, # de pixeles dependiendo de la direccion.
+
+
+    res.send({direccion: "up", pixels: "300"})
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.put("/update/life", (req, response) =>
 {

@@ -18,9 +18,10 @@ var grayLife = 100;
 
 var yellowScore, grayScore;
 
-
-//sendLife();
 init(); 
+
+gameID = localStorage.getItem("game");
+document.getElementById("gameSesion").innerHTML = gameID;
 
 
 function preload()
@@ -58,7 +59,6 @@ function update()
     enableTanksControl();
 
     shoot();
-
 
     game.physics.arcade.overlap(
         yellowWeapon.bullets,
@@ -109,12 +109,7 @@ function update()
     );
 
 
-
-    
-
 }
-
-
 
 var  bricks, obtacules;
 function drawBricks()
@@ -197,7 +192,7 @@ function drawYellowTank()
 
     //action
     yellowFire = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-    
+
 }
 
 
@@ -236,6 +231,7 @@ function enableTanksControl()
     yellow.body.velocity.x = 0;
     yellow.body.velocity.y = 0;
 
+
     gray.body.velocity.x = 0;
     gray.body.velocity.y = 0;
 
@@ -245,10 +241,6 @@ function enableTanksControl()
          yellow.body.velocity.y = 0;
          yellow.animations.play("izquierda");
          yellowWeapon.fireAngle = Phaser.ANGLE_LEFT;
- 
-         //console.log("DATA") 
-         lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -264,7 +256,6 @@ function enableTanksControl()
          yellowWeapon.fireAngle = Phaser.ANGLE_RIGHT;
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -282,7 +273,6 @@ function enableTanksControl()
          
  
          lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
-         //console.log(lista)
 
          document.getElementById("x").innerHTML = Math.trunc(yellow.world.x);
          document.getElementById("y").innerHTML = Math.trunc(yellow.world.y);
@@ -375,6 +365,7 @@ function enableTanksControl()
 }
 
 
+
 function shoot()
 {
     if(yellowFire.isDown)
@@ -412,6 +403,7 @@ function hitGray(weapon)
 
     weapon.kill();
     console.log("AQUI LOGICA");
+    document.getElementById("grayLife").innerHTML = grayLife.toString();
 }
 
 
@@ -428,7 +420,7 @@ function hitYellow(weapon)
     drawYellowTank();
 
     weapon.kill();
-    console.log("AQUI LOGICA");
+    document.getElementById("yellowLife").innerHTML = yellowLife.toString();
 }
 
 
@@ -463,7 +455,7 @@ function sendLife(uuid_player, life)
         }
     });
 
-    document.getElementById("disparo").innerHTML = life.toString();
+  //  document.getElementById("yellowLife").innerHTML = life.toString();
 
 }
 
@@ -503,5 +495,42 @@ function init(data)
     });
 }
 
+
+
+function requestMovement(uuid_player, x, y)
+{
+    json = {
+       "sesion_uuid": localStorage.getItem("game"),
+      "player_uuid": uuid_player,
+      "x": x,
+      "y": y
+    }
+
+    $.ajax('/movement', {
+        type: 'post',
+        contentType:'application/json',
+        data: JSON.stringify(json),
+        xhrFields:{withCredentials: false},
+        success: function(data)
+        {
+            return data
+        },
+        error: function(error){
+            console.log(error)
+        }
+    });
+
+
+}
+
+
+
+// yellow.body.velocity.y = -100;
+// yellow.body.velocity.x = 0;
+// yellow.animations.play("arriba");
+// yellowWeapon.fireAngle = Phaser.ANGLE_UP;
+
+
+// lista = [Math.trunc(yellow.world.x), Math.trunc(yellow.world.y)];
 
 
