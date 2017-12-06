@@ -1,7 +1,6 @@
 <template>
 
 <div>
-
     <my-navbar></my-navbar>
 
     <div class="container margin">
@@ -82,7 +81,7 @@ export default {
               password: this.password
           }
 
-          this.$http.post('http://localhost:5000/register', data).then( response => {
+          this.$http.post('http://localhost:5000/api/v1.2.0/auth/register', data).then( response => {
 
               console.log(response.body.message);              
           })

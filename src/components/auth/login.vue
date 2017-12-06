@@ -70,7 +70,7 @@ export default {
           var auth = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
 
             var options = {
-                url: 'http://localhost:5000/login',
+                url: 'http://localhost:5000/api/v1.2.0/auth/login',
                 method: 'GET',
                 headers: 
                 {
