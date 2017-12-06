@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import VueResource from 'vue-resource'
 import login from '@/components/auth/login'
 import register from '@/components/auth/register'
+import dashboard from '@/components/dashboard/dashboard'
 
 
 Vue.use(Router)
@@ -13,17 +14,32 @@ export default new Router({
     {
       path: '/',
       name: 'Logina',
-      component: login
+      component: login,
+      meta: {
+        forVisitors: true
+      }
     },
     {
       path: '/login',
       name: 'Login',
-      component: login
+      component: login,
+      meta: {
+        forVisitors: true
+      }
     },
     {
       path: '/register',
       name: 'Register',
-      component: register
+      component: register,
+      meta: {
+        forVisitors: true
+      }
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: dashboard
     }
+    
   ]
 })

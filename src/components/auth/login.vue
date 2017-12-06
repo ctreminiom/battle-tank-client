@@ -79,8 +79,10 @@ export default {
             }
 
                 this.$http(options).then((response) => {
-                    
-                    console.log(response.body.message);
+
+                    this.$auth.setToken(response.body.message)
+
+                    this.$router.push('/dashboard')
                 });
       }
   }
