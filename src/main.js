@@ -7,7 +7,6 @@ import router from './router'
 import Auth from '@/packages/auth/auth.js'
 
 Vue.use(Auth)
-
 Vue.config.productionTip = false
 
 router.beforeEach(
