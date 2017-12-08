@@ -25,23 +25,12 @@
                             </div>
 
                             <button  @click="login" type="submit" class="btn btn-info">Login</button>
-                            <button type="submit" class="btn btn-warning">Facebook</button>
-
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <pre>{{ $data }}</pre>
-            </div>
-        </div>
-    </div>
-
 </div>
   
 </template>

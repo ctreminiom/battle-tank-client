@@ -4,6 +4,8 @@ import VueResource from 'vue-resource'
 import login from '@/components/auth/login'
 import register from '@/components/auth/register'
 import dashboard from '@/components/dashboard/dashboard'
+import canvas from '@/components/canvas/canvas'
+
 
 
 Vue.use(Router)
@@ -39,6 +41,12 @@ export default new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: dashboard
+    },
+
+    {
+      path: '/canvas',
+      name: 'Canvas',
+      component: canvas
     }
     
   ]
