@@ -28,7 +28,7 @@ export default {
                 this.$http(options).then((response) => 
                 {
                     console.log(response.body)
-
+                    alert("Game sesion created")
                 });
         }
     }
@@ -39,5 +39,10 @@ export default {
 
 
 <style>
+
+button
+{
+    margin-bottom: 2%;
+}
 
 </style>

@@ -27,6 +27,9 @@ export default {
         logout: function()
         {
             this.$game.destroyToken()
+            this.$player01.destroyToken()
+            this.$player02.destroyToken()
+            
             this.$router.push('/dashboard')
         }
     }

@@ -76,7 +76,10 @@ export default {
 
           this.$http.post('http://localhost:5000/api/v1.2.0/auth/register', data).then( response => {
 
-              console.log(response.body.message);              
+              console.log(response.body.message);
+              
+              alert('New user created')
+              this.$router.push('/login')
           })
       }
   }

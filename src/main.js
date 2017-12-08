@@ -7,9 +7,17 @@ import router from './router'
 import Auth from '@/packages/auth/auth.js'
 import Game from '@/packages/auth/game.js'
 
+import Player01 from '@/packages/auth/player01.js'
+import Player02 from '@/packages/auth/player02.js'
+
 
 Vue.use(Auth)
 Vue.use(Game)
+
+Vue.use(Player01)
+Vue.use(Player02)
+
+
 Vue.config.productionTip = false
 
 router.beforeEach(
