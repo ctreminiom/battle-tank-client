@@ -20,7 +20,7 @@
                         <td> {{data.enable}} </td>
                         <td> {{data.players.user_id_}} </td>
                         <td>
-                            <button class="btn btn-warning">
+                            <button @click="start(data.uuid)" class="btn btn-warning">
                                 Join
                             </button>
                         </td>
@@ -59,6 +59,14 @@ export default {
             this.lista = response.body
         });
 
+    },
+    methods: 
+    {
+        start: function (game_uuid) 
+        {
+            this.$game.setToken(game_uuid)
+            this.$router.push('/canvas')
+        }
     }
 }
 </script>

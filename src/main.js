@@ -5,8 +5,11 @@ import App from './App'
 import router from './router'
 
 import Auth from '@/packages/auth/auth.js'
+import Game from '@/packages/auth/game.js'
+
 
 Vue.use(Auth)
+Vue.use(Game)
 Vue.config.productionTip = false
 
 router.beforeEach(

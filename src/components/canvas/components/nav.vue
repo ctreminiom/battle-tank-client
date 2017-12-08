@@ -2,7 +2,7 @@
 
         <nav class="navbar navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand">Game {{ game_sesion}}</a>
+                <a class="navbar-brand"><strong>Game :</strong> {{ game_sesion}} </a>
                 <ul class="navbar-nav">
                 <li class="nav-item">
                     <a @click="logout" class="nav-link" href="">Exit</a>
@@ -18,7 +18,7 @@ export default {
 
     data () {
         return {
-            game_sesion: "sdadsad"
+            game_sesion: localStorage.getItem('game')
         }
     },
     
@@ -26,9 +26,8 @@ export default {
     {
         logout: function()
         {
-            this.$auth.destroyToken()
-
-            this.$router.push('/login')
+            this.$game.destroyToken()
+            this.$router.push('/dashboard')
         }
     }
 }
